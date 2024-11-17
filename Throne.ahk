@@ -1,43 +1,64 @@
 ﻿$1:: {
     static key1 := "1"
-    if (!WinActiveTitleIsTL()) {
-        Send key1
-    }
-
-    if (TLProcessExists() && !WinActiveTitleIsTL()) {
+    static filter := KeyPressFilter(key1)
+    if (!filter.CanContinue()) {
         return
     }
 
-    static key1Handler := KeyPressHandler(key1, -2950)
-    if key1Handler.KeyPressedPreviously() {
+    static handler := KeyPressHandler(key1, -2950)
+    if handler.KeyPressedPreviously() {
         return
     } else {
-        key1Handler.PressKey()
-        SetupPressKeyAfterDelay(&key1Handler)
+        handler.PressKey()
+        SetupPressKeyAfterDelay(&handler)
     }
 }
 
 $3:: {
     static key3 := "3"
-    if (!WinActiveTitleIsTL()) {
-        Send key3
-    }
 
-    if (TLProcessExists() && !WinActiveTitleIsTL()) {
+	static filter := KeyPressFilter(key3)
+    if (!filter.CanContinue()) {
         return
     }
 
-    static key3Handler := KeyPressHandler(key3, -8950)
-    if key3Handler.KeyPressedPreviously() {
+    static handler := KeyPressHandler(key3, -8950)
+    if handler.KeyPressedPreviously() {
         return
     } else {
-        key3Handler.PressKey()
-        SetupPressKeyAfterDelay(&key3Handler)
+        handler.PressKey()
+        SetupPressKeyAfterDelay(&handler)
     }
 }
 
-class ProcessHandler extends Object {
+class KeyPressFilter {
+	sendKey := ""
+
+	; Setup key
+    __New(sendKey) {
+        this.sendKey := sendKey
+    }
+
+	CanContinue() {
+		if (!this.WinActiveTitleIsTL()) {
+			Send this.sendKey
+		}
 	
+		if (this.TLProcessExists() && !this.WinActiveTitleIsTL()) {
+			return 0
+		}
+
+		return 1
+	}
+
+	TLProcessExists() {
+		return ProcessExist("TL.exe")
+	}
+	
+	WinActiveTitleIsTL() {
+		activeWinTitle := WinGetTitle("A")
+		return InStr(activeWinTitle, "TL")
+	}
 }
 
 class KeyPressHandler {
@@ -64,15 +85,6 @@ class KeyPressHandler {
         Send this.sendKey
         this.keyPressCount := 0
     }
-}
-
-TLProcessExists() {
-    return ProcessExist("TL.exe")
-}
-
-WinActiveTitleIsTL() {
-    activeWinTitle := WinGetTitle("A")
-    return InStr(activeWinTitle, "TL")
 }
 
 SetupPressKeyAfterDelay(&keyHandler) {
