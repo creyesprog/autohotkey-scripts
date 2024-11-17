@@ -1,36 +1,46 @@
 ﻿$1:: {
-	static key1 := "1"
-    static key1Handler := KeyPressHandler(key1, -2950)
-    if (TLProcessExists() and WinActiveTitleIsTL()) {
-        if key1Handler.KeyPressedPreviously() {
-            return
-        }
-
-        key1Handler.PressKey()
-
-        PressKeyAfterDelay(&key1Handler)
-    } else {
+    static key1 := "1"
+    if (!WinActiveTitleIsTL()) {
         Send key1
+    }
+
+    if (TLProcessExists() && !WinActiveTitleIsTL()) {
+        return
+    }
+
+    static key1Handler := KeyPressHandler(key1, -2950)
+    if key1Handler.KeyPressedPreviously() {
+        return
+    } else {
+        key1Handler.PressKey()
+        SetupPressKeyAfterDelay(&key1Handler)
     }
 }
 
 $3:: {
-	static key3 := "3"
-	static key3Handler := KeyPressHandler(key3, -8950)
-    if (TLProcessExists() and WinActiveTitleIsTL()) {
-        if key3Handler.KeyPressedPreviously() {
-            return
-        }
-
-        key3Handler.PressKey()
-
-        PressKeyAfterDelay(&key3Handler)
-    } else {
+    static key3 := "3"
+    if (!WinActiveTitleIsTL()) {
         Send key3
+    }
+
+    if (TLProcessExists() && !WinActiveTitleIsTL()) {
+        return
+    }
+
+    static key3Handler := KeyPressHandler(key3, -8950)
+    if key3Handler.KeyPressedPreviously() {
+        return
+    } else {
+        key3Handler.PressKey()
+        SetupPressKeyAfterDelay(&key3Handler)
     }
 }
 
-class KeyPressHandler extends Object {
+class ProcessHandler extends Object {
+	
+}
+
+class KeyPressHandler {
     keyPressCount := 0
     sendKey := ""
     delay := 0
@@ -65,16 +75,6 @@ WinActiveTitleIsTL() {
     return InStr(activeWinTitle, "TL")
 }
 
-PressKeyAfterDelay(&keyHandler) {
+SetupPressKeyAfterDelay(&keyHandler) {
     SetTimer () => keyHandler.PressKeyWithReset(), keyHandler.delay
-}
-
-SendKey1AfterDelay() {
-    Send "1"
-    key1_presses := 0
-}
-
-SendKey3AfterDelay() {
-    Send "3"
-    key3_presses := 0
 }
