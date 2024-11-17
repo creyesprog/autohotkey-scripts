@@ -1,5 +1,6 @@
 ﻿$1:: {
     static key1 := "1"
+	
     static filter := KeyPressFilter(key1)
     if (!filter.CanContinue()) {
         return
