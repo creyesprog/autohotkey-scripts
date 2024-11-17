@@ -1,4 +1,36 @@
-﻿class KeyPressHandler extends Object {
+﻿$1:: {
+	static key1 := "1"
+    static key1Handler := KeyPressHandler(key1, -2950)
+    if (TLProcessExists() and WinActiveTitleIsTL()) {
+        if key1Handler.KeyPressedPreviously() {
+            return
+        }
+
+        key1Handler.PressKey()
+
+        PressKeyAfterDelay(&key1Handler)
+    } else {
+        Send key1
+    }
+}
+
+$3:: {
+	static key3 := "3"
+	static key3Handler := KeyPressHandler(key3, -8950)
+    if (TLProcessExists() and WinActiveTitleIsTL()) {
+        if key3Handler.KeyPressedPreviously() {
+            return
+        }
+
+        key3Handler.PressKey()
+
+        PressKeyAfterDelay(&key3Handler)
+    } else {
+        Send key3
+    }
+}
+
+class KeyPressHandler extends Object {
     keyPressCount := 0
     sendKey := ""
     delay := 0
@@ -21,38 +53,6 @@
     PressKeyWithReset() {
         Send this.sendKey
         this.keyPressCount := 0
-    }
-}
-
-$1:: {
-    static key1Handler := KeyPressHandler("1", -2950)
-    if (TLProcessExists() and WinActiveTitleIsTL()) {
-        if key1Handler.KeyPressedPreviously() {
-            return
-        }
-
-        key1Handler.PressKey()
-
-        PressKeyAfterDelay(&key1Handler)
-    } else {
-        Send "1"
-    }
-}
-
-$3:: {
-    static key3_presses := 0
-
-    if (TLProcessExists() and WinActiveTitleIsTL()) {
-        if key3_presses > 0 {
-            return
-        }
-
-        key3_presses += 1
-        Send "3"
-
-        SetTimer SendKey3AfterDelay, -8950
-    } else {
-        Send "3"
     }
 }
 
