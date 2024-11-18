@@ -1,5 +1,24 @@
 ﻿#Requires AutoHotkey v2.0
 
+$3:: {
+    static key3 := "3"
+
+    static filter := KeyPressFilter(key3)
+    if (!filter.CanContinue()) {
+        return
+    }
+
+    Send key3
+    Sleep 250
+    Send "e"
+    Sleep 400
+    Send "2"
+    Sleep 500
+    Send "4"
+    Sleep 1600
+    Send "r"
+}
+
 $XButton1:: {
     static mouse4 := "X1"
 
