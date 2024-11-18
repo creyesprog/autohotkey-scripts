@@ -1,6 +1,6 @@
 ﻿$1:: {
     static key1 := "1"
-	
+
     static filter := KeyPressFilter(key1)
     if (!filter.CanContinue()) {
         return
@@ -8,6 +8,7 @@
 
     static handler := KeyPressHandler(key1, -2950)
     if handler.KeyPressedPreviously() {
+        handler.PressKey()
         return
     } else {
         handler.PressKey()
@@ -18,13 +19,14 @@
 $3:: {
     static key3 := "3"
 
-	static filter := KeyPressFilter(key3)
+    static filter := KeyPressFilter(key3)
     if (!filter.CanContinue()) {
         return
     }
 
     static handler := KeyPressHandler(key3, -8950)
     if handler.KeyPressedPreviously() {
+        handler.PressKey()
         return
     } else {
         handler.PressKey()
@@ -32,34 +34,72 @@ $3:: {
     }
 }
 
-class KeyPressFilter {
-	sendKey := ""
+$XButton1:: {
+    static mouse4 := "X1"
 
-	; Setup key
-    __New(sendKey) {
-        this.sendKey := sendKey
+    static filter := MouseClickFilter(mouse4)
+    if (!filter.CanContinue()) {
+        return
     }
 
+    MouseClick "Left"
+    MouseGetPos &xpos, &ypos
+    MouseMove 450, 300
+    MouseClick "X1"
+    MouseMove xpos, ypos
+}
+
+class InputFilterBase {
+    input := ""
+
+    ; Setup key
+    __New(input) {
+        this.input := input
+    }
+
+    CanContinue() {
+		; Inheritors should implement this
+		MsgBox "CanContinue not implemented"
+    }
+
+    TLProcessExists() {
+        return ProcessExist("TL.exe")
+    }
+
+    WinActiveTitleIsTL() {
+        activeWinTitle := WinGetTitle("A")
+        return InStr(activeWinTitle, "TL")
+    }
+}
+
+class KeyPressFilter extends InputFilterBase {
+
+    CanContinue() {
+        if (!this.WinActiveTitleIsTL()) {
+            Send this.input
+        }
+
+        if (this.TLProcessExists() && !this.WinActiveTitleIsTL()) {
+            return 0
+        }
+
+        return 1
+    }
+}
+
+class MouseClickFilter extends InputFilterBase {
+
 	CanContinue() {
-		if (!this.WinActiveTitleIsTL()) {
-			Send this.sendKey
-		}
-	
-		if (this.TLProcessExists() && !this.WinActiveTitleIsTL()) {
-			return 0
-		}
+        if (!this.WinActiveTitleIsTL()) {
+            MouseClick this.input
+        }
 
-		return 1
-	}
+        if (this.TLProcessExists() && !this.WinActiveTitleIsTL()) {
+            return 0
+        }
 
-	TLProcessExists() {
-		return ProcessExist("TL.exe")
-	}
-	
-	WinActiveTitleIsTL() {
-		activeWinTitle := WinGetTitle("A")
-		return InStr(activeWinTitle, "TL")
-	}
+        return 1
+    }
 }
 
 class KeyPressHandler {
