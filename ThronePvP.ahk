@@ -1,6 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 
-$3:: {
+; shift + 3
++$3:: {
     static key3 := "3"
 
     static filter := KeyPressFilter(key3)
