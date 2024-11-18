@@ -27,11 +27,11 @@ $XButton1:: {
         return
     }
 
-    WinGetPos , , &width, &height, "A"
+    WinGetPos ,,&width,,"A"
 
     MouseClick "Left"
     MouseGetPos &xpos, &ypos
-    MouseMove width, height
+    MouseMove width, 0
     MouseClick "X1"
     MouseMove xpos, ypos
 }
