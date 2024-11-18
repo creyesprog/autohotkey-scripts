@@ -1,41 +1,5 @@
 ﻿#Requires AutoHotkey v2.0
 
-$1:: {
-    static key1 := "1"
-
-    static filter := KeyPressFilter(key1)
-    if (!filter.CanContinue()) {
-        return
-    }
-
-    static handler := KeyPressHandler(key1, -2950)
-    if handler.KeyPressedPreviously() {
-        handler.PressKey()
-        return
-    } else {
-        handler.PressKey()
-        SetupPressKeyAfterDelay(&handler)
-    }
-}
-
-$3:: {
-    static key3 := "3"
-
-    static filter := KeyPressFilter(key3)
-    if (!filter.CanContinue()) {
-        return
-    }
-
-    static handler := KeyPressHandler(key3, -8950)
-    if handler.KeyPressedPreviously() {
-        handler.PressKey()
-        return
-    } else {
-        handler.PressKey()
-        SetupPressKeyAfterDelay(&handler)
-    }
-}
-
 $XButton1:: {
     static mouse4 := "X1"
 
@@ -44,7 +8,7 @@ $XButton1:: {
         return
     }
 
-	WinGetPos , , &width, &height, "A"
+    WinGetPos , , &width, &height, "A"
 
     MouseClick "Left"
     MouseGetPos &xpos, &ypos
