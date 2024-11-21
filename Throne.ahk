@@ -36,6 +36,26 @@ $3:: {
     }
 }
 
+; shift + 3
++$3:: {
+    static key3 := "3"
+
+    static filter := KeyPressFilter(key3)
+    if (!filter.CanContinue()) {
+        return
+    }
+
+    Send key3
+    Sleep 250
+    Send "e"
+    Sleep 400
+    Send "2"
+    Sleep 500
+    Send "4"
+    Sleep 1600
+    Send "r"
+}
+
 $XButton1:: {
     static mouse4 := "X1"
 
@@ -109,12 +129,12 @@ class MouseClickFilter extends InputFilterBase {
 class KeyPressHandler {
     keyPressCount := 0
     sendKey := ""
-    delay := 0
+    delayInMilliseconds := 0
 
     ; Setup key and delay for eventual send
-    __New(sendKey, delay) {
+    __New(sendKey, delayInMilliseconds) {
         this.sendKey := sendKey
-        this.delay := delay
+        this.delayInMilliseconds := delayInMilliseconds
     }
 
     KeyPressedPreviously() {
@@ -133,5 +153,5 @@ class KeyPressHandler {
 }
 
 SetupPressKeyAfterDelay(&keyHandler) {
-    SetTimer () => keyHandler.PressKeyWithReset(), keyHandler.delay
+    SetTimer () => keyHandler.PressKeyWithReset(), keyHandler.delayInMilliseconds
 }
